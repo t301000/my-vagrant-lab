@@ -1,0 +1,52 @@
+#########################
+# ****** 設定 ****** 
+#########################
+
+# box name
+$box_name = "ubuntu-docker-lab"
+
+# client 節點數量
+$number_of_nodes = 1
+
+# server 之 hostname
+$server_hostname = 'myserver'
+
+# clinet 節點 hostname 前綴
+$node_hostname_prefix = 'mynode'
+
+# 使用之 host only 網段
+$private_ip_prefix = '192.168.33'
+
+#########################
+# ****** 設定結束 ******
+#########################
+
+
+def config_node(node, hostname, node_ip)
+  node.vm.hostname = hostname
+  node.vm.network 'private_network', ip: node_ip
+end
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = $box_name
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+  end
+
+  hostname_server = $server_hostname
+  server_ip = "#{$private_ip_prefix}.100"
+  config.vm.define hostname_server do |server|
+    config_node(server, hostname_server, server_ip)
+  end
+
+  (1..$number_of_nodes).each do |i|
+    hostname_node = "#{$node_hostname_prefix}-%02d" % i
+    node_ip = "#{$private_ip_prefix}.#{100+i}"
+    config.vm.define hostname_node do |node|
+      config_node(node, hostname_node, node_ip)
+    end
+  end
+
+end
