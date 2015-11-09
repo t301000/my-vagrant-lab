@@ -71,7 +71,15 @@ Vagrant.configure(2) do |config|
      chmod +x /usr/local/bin/docker-compose
      docker-compose --version
      
+     echo "**** 11 => delete /etc/docker/key.json ****"
+     rm -f /etc/docker/key.json
+     
      echo "**** All finished ****"
+     echo "****"
+     echo "****"
+     echo "**** !! Run 'vagrant package' to generate new box !! ****"
+     echo "****"
+     echo "****"
      
   SHELL
 
